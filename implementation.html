@@ -62,6 +62,56 @@
       user-select: none;
     }
 
+    .hud {
+      position: absolute;
+      top: 18px;
+      left: 18px;
+      z-index: 12;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      max-width: min(60%, 560px);
+    }
+
+    .drug-btn {
+      border: 1px solid rgba(255,255,255,0.25);
+      background: rgba(5,12,22,0.76);
+      color: #f2f6ff;
+      font-weight: 700;
+      border-radius: 999px;
+      padding: 10px 14px;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      backdrop-filter: blur(8px);
+    }
+
+    .drug-btn:hover {
+      border-color: rgba(255,98,98,0.75);
+      transform: translateY(-1px);
+    }
+
+    .drug-btn.active {
+      background: rgba(255,54,54,0.24);
+      border-color: rgba(255,102,102,0.95);
+      box-shadow: 0 0 18px rgba(255,72,72,0.4);
+    }
+
+    .status {
+      position: absolute;
+      top: 88px;
+      left: 18px;
+      z-index: 12;
+      background: rgba(4,10,18,0.72);
+      border: 1px solid rgba(255,255,255,0.16);
+      border-radius: 14px;
+      padding: 10px 14px;
+      font-size: 0.92rem;
+      color: #cbd9ff;
+      backdrop-filter: blur(8px);
+      max-width: min(60%, 540px);
+      line-height: 1.5;
+    }
+
     .slide {
       position: absolute;
       inset: 0;
@@ -132,6 +182,62 @@
       }
     }
 
+    .brain-panel {
+      position: absolute;
+      right: 16px;
+      top: 16px;
+      width: min(29%, 340px);
+      min-width: 220px;
+      aspect-ratio: 4 / 3.2;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,0.22);
+      background: rgba(6,14,28,0.72);
+      backdrop-filter: blur(9px);
+      overflow: hidden;
+      z-index: 10;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+
+    .brain-panel img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: saturate(0.95) brightness(0.8);
+    }
+
+    .brain-hotspot {
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0;
+      background: rgba(255,85,85,0.2);
+      border: 1px solid rgba(255,120,120,0.8);
+      box-shadow:
+        0 0 0 0 rgba(255,66,66,0),
+        0 0 20px rgba(255,66,66,0.35);
+      transform: translate(-50%, -50%) scale(0.92);
+    }
+
+    .brain-hotspot.flashing {
+      animation: brainFlash 1.15s ease-in-out infinite;
+    }
+
+    @keyframes brainFlash {
+      0%, 100% {
+        opacity: 0.16;
+        box-shadow:
+          0 0 0 0 rgba(255,66,66,0),
+          0 0 18px rgba(255,66,66,0.22);
+        transform: translate(-50%, -50%) scale(0.9);
+      }
+      50% {
+        opacity: 0.92;
+        box-shadow:
+          0 0 0 18px rgba(255,66,66,0),
+          0 0 36px rgba(255,66,66,0.55);
+        transform: translate(-50%, -50%) scale(1.03);
+      }
+    }
+
     .guide {
       margin-top: 18px;
       display: inline-block;
@@ -161,6 +267,34 @@
         width: min(1120px, calc(100% - 20px));
         padding-top: 78px;
       }
+
+      .hud,
+      .status {
+        position: static;
+        max-width: 100%;
+        margin: 10px 0 0;
+      }
+
+      .stage {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        padding: 12px;
+      }
+
+      .slide {
+        position: relative;
+        border-radius: 16px;
+        overflow: hidden;
+      }
+
+      .brain-panel {
+        position: relative;
+        width: 100%;
+        min-width: 0;
+        top: auto;
+        right: auto;
+      }
     }
   </style>
 </head>
@@ -172,6 +306,9 @@
     <h1>약물의 체내 전달과 뇌 신경계 영향 시각화</h1>
 
     <div class="stage" id="stage">
+      <div class="hud" id="drug-buttons"></div>
+      <div class="status" id="status-text"></div>
+
       <div class="slide active" id="slide-vessel">
         <img src="vessel_map.png" alt="인체 혈관 및 장기 지도" />
         <svg class="path-overlay" id="path-overlay" viewBox="0 0 1600 900" preserveAspectRatio="none">
@@ -189,33 +326,80 @@
         <div class="pulse-dot" id="pulse-dot"></div>
       </div>
 
-      <div class="slide" id="slide-brain">
-        <img src="brain.jpg" alt="뇌 자극 이미지" />
-      </div>
-
-      <div class="slide" id="slide-synapse">
-        <img src="synapse.jpg" alt="시냅스 전달 이미지" />
+      <div class="brain-panel">
+        <img src="brain.jpg" alt="약물 영향 뇌 영역" />
+        <div class="brain-hotspot" id="prefrontal"></div>
+        <div class="brain-hotspot" id="nucleus"></div>
+        <div class="brain-hotspot" id="hippocampus"></div>
+        <div class="brain-hotspot" id="amygdala"></div>
+        <div class="brain-hotspot" id="brainstem"></div>
       </div>
     </div>
 
-    <div class="guide" id="guide">다시 재생하고 싶으면 화면을 클릭하세요</div>
+    <div class="guide" id="guide">마약 종류를 고른 뒤 화면을 클릭하면 팔꿈치 혈관 → 뇌 도달 애니메이션이 시작됩니다.</div>
   </div>
 
   <script>
     const stage = document.getElementById("stage");
     const slideVessel = document.getElementById("slide-vessel");
-    const slideBrain = document.getElementById("slide-brain");
-    const slideSynapse = document.getElementById("slide-synapse");
     const pulseDot = document.getElementById("pulse-dot");
     const bloodPath = document.getElementById("blood-path");
+    const statusText = document.getElementById("status-text");
+    const drugButtons = document.getElementById("drug-buttons");
+    const hotspots = {
+      prefrontal: document.getElementById("prefrontal"),
+      nucleus: document.getElementById("nucleus"),
+      hippocampus: document.getElementById("hippocampus"),
+      amygdala: document.getElementById("amygdala"),
+      brainstem: document.getElementById("brainstem")
+    };
 
     let timers = [];
     let frameId = null;
     let running = false;
+    let selectedDrug = "meth";
 
-    const DUR_VESSEL = 10000;   // 첫 장면 10초
-    const DUR_BRAIN = 10000;    // 두번째 장면 10초
-    const DUR_SYNAPSE = 10000;  // 세번째 장면 10초
+    const DUR_VESSEL = 8200;
+    const HOTSPOT_FLASH_DUR = 6500;
+    const DRUGS = {
+      meth: {
+        label: "메스암페타민",
+        color: "rgba(255, 88, 88, 0.95)",
+        targets: ["nucleus", "prefrontal"],
+        message: "보상회로(측좌핵)와 전전두엽을 강하게 과자극해 충동 조절과 판단 기능을 무너뜨립니다."
+      },
+      cocaine: {
+        label: "코카인",
+        color: "rgba(255, 138, 82, 0.95)",
+        targets: ["nucleus", "amygdala"],
+        message: "도파민 재흡수 억제로 보상회로와 편도체의 흥분이 커져 불안·집착이 강화될 수 있습니다."
+      },
+      heroin: {
+        label: "헤로인(오피오이드)",
+        color: "rgba(255, 116, 162, 0.95)",
+        targets: ["brainstem", "nucleus"],
+        message: "뇌간 호흡중추와 보상회로에 작용해 호흡 억제·의존 위험을 급격히 높입니다."
+      },
+      cannabis: {
+        label: "대마",
+        color: "rgba(151, 255, 137, 0.95)",
+        targets: ["hippocampus", "prefrontal"],
+        message: "해마·전전두엽 CB1 수용체에 작용해 기억 고정과 집중력, 실행기능에 영향을 줍니다."
+      },
+      nicotine: {
+        label: "니코틴",
+        color: "rgba(129, 184, 255, 0.95)",
+        targets: ["nucleus", "prefrontal", "amygdala"],
+        message: "니코틴성 수용체를 통해 보상회로·주의회로·정서회로가 동시에 강화돼 빠른 중독이 생깁니다."
+      }
+    };
+    const HOTSPOT_LAYOUT = {
+      prefrontal: { x: 72, y: 38, w: 68, h: 52 },
+      nucleus: { x: 57, y: 56, w: 56, h: 48 },
+      hippocampus: { x: 43, y: 54, w: 54, h: 42 },
+      amygdala: { x: 47, y: 65, w: 42, h: 34 },
+      brainstem: { x: 33, y: 71, w: 46, h: 54 }
+    };
 
     function clearAll() {
       timers.forEach(clearTimeout);
@@ -225,19 +409,12 @@
       running = false;
     }
 
-    function showOnly(target) {
-      [slideVessel, slideBrain, slideSynapse].forEach(slide => {
-        slide.classList.remove("active", "zoom");
-      });
-      target.classList.add("active");
-    }
-
     function resetSlides() {
-      showOnly(slideVessel);
+      slideVessel.classList.add("active");
       pulseDot.style.opacity = "0";
       pulseDot.classList.remove("animating");
-      slideBrain.classList.remove("zoom");
-      slideSynapse.classList.remove("zoom");
+      clearHotspots();
+      applyHotspotBaseLayout();
     }
 
     function getPathPoint(progress) {
@@ -248,13 +425,73 @@
     function positionDotAt(progress) {
       const point = getPathPoint(progress);
       const stageRect = stage.getBoundingClientRect();
-      const svgRect = document.getElementById("path-overlay").getBoundingClientRect();
 
       const x = point.x / 1600 * stageRect.width;
       const y = point.y / 900 * stageRect.height;
 
       pulseDot.style.left = `${x}px`;
       pulseDot.style.top = `${y}px`;
+    }
+
+    function applyHotspotBaseLayout() {
+      Object.entries(HOTSPOT_LAYOUT).forEach(([key, cfg]) => {
+        const spot = hotspots[key];
+        spot.style.left = `${cfg.x}%`;
+        spot.style.top = `${cfg.y}%`;
+        spot.style.width = `${cfg.w}px`;
+        spot.style.height = `${cfg.h}px`;
+      });
+    }
+
+    function clearHotspots() {
+      Object.values(hotspots).forEach(spot => {
+        spot.classList.remove("flashing");
+        spot.style.background = "rgba(255,85,85,0.2)";
+        spot.style.borderColor = "rgba(255,120,120,0.8)";
+      });
+    }
+
+    function activateDrugHotspots(drugKey) {
+      clearHotspots();
+      const info = DRUGS[drugKey];
+      info.targets.forEach(target => {
+        const spot = hotspots[target];
+        spot.style.background = info.color.replace("0.95", "0.25");
+        spot.style.borderColor = info.color;
+        spot.classList.add("flashing");
+      });
+    }
+
+    function updateStatusText(text) {
+      statusText.textContent = text;
+    }
+
+    function renderDrugButtons() {
+      Object.entries(DRUGS).forEach(([key, info]) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "drug-btn";
+        button.dataset.drug = key;
+        button.textContent = info.label;
+
+        button.addEventListener("click", (event) => {
+          event.stopPropagation();
+          selectedDrug = key;
+          syncButtonState();
+          updateStatusText(`선택 약물: ${info.label} · ${info.message}`);
+          if (!running) {
+            resetSlides();
+          }
+        });
+
+        drugButtons.appendChild(button);
+      });
+    }
+
+    function syncButtonState() {
+      [...drugButtons.querySelectorAll(".drug-btn")].forEach(btn => {
+        btn.classList.toggle("active", btn.dataset.drug === selectedDrug);
+      });
     }
 
     function animateBloodFlow(duration = DUR_VESSEL) {
@@ -279,27 +516,24 @@
       clearAll();
       resetSlides();
       running = true;
+      const info = DRUGS[selectedDrug];
 
       positionDotAt(0);
       animateBloodFlow(DUR_VESSEL);
+      updateStatusText(`혈관 이동 중... ${info.label} 성분이 팔꿈치 혈관에서 뇌로 향합니다.`);
 
       timers.push(setTimeout(() => {
         pulseDot.style.opacity = "0";
         pulseDot.classList.remove("animating");
-        showOnly(slideBrain);
-        slideBrain.classList.add("zoom");
+        activateDrugHotspots(selectedDrug);
+        updateStatusText(`뇌 도달! ${info.message}`);
       }, DUR_VESSEL));
 
       timers.push(setTimeout(() => {
-        slideBrain.classList.remove("zoom");
-        showOnly(slideSynapse);
-        slideSynapse.classList.add("zoom");
-      }, DUR_VESSEL + DUR_BRAIN));
-
-      timers.push(setTimeout(() => {
-        slideSynapse.classList.remove("zoom");
+        clearHotspots();
+        updateStatusText(`재생 완료. 다른 약물을 눌러 비교해 보세요.`);
         running = false;
-      }, DUR_VESSEL + DUR_BRAIN + DUR_SYNAPSE));
+      }, DUR_VESSEL + HOTSPOT_FLASH_DUR));
     }
 
     stage.addEventListener("click", () => {
@@ -307,10 +541,14 @@
     });
 
     window.addEventListener("resize", () => {
-      if (!running) {
-        positionDotAt(0);
-      }
+      applyHotspotBaseLayout();
+      if (!running) positionDotAt(0);
     });
+
+    renderDrugButtons();
+    syncButtonState();
+    applyHotspotBaseLayout();
+    updateStatusText(`선택 약물: ${DRUGS[selectedDrug].label} · ${DRUGS[selectedDrug].message}`);
 
     // 첫 진입 시 1회 자동 재생
     startSequence();
