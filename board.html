@@ -15,7 +15,6 @@
       color: #fff;
     }
 
-    /* 🔥 이전 버튼 */
     .back {
       position: fixed;
       top: 18px;
@@ -32,13 +31,23 @@
     }
 
     .wrap {
-      width: min(1000px, 90%);
+      width: min(1100px, 92%);
       margin: 100px auto 60px;
     }
 
     h1 {
-      margin-bottom: 20px;
+      margin: 0 0 20px;
       font-size: 2rem;
+      letter-spacing: -0.03em;
+    }
+
+    .composer {
+      background: #131c2f;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 22px;
+      padding: 18px;
+      margin-bottom: 22px;
+      box-shadow: 0 18px 50px rgba(0,0,0,0.2);
     }
 
     input, textarea {
@@ -50,66 +59,242 @@
       background: #1b2438;
       color: #fff;
       font-size: 1rem;
+      outline: none;
+    }
+
+    input::placeholder, textarea::placeholder {
+      color: #93a5cc;
     }
 
     textarea {
       min-height: 160px;
       resize: vertical;
+      line-height: 1.7;
     }
 
-    button {
+    .primary-btn {
       padding: 12px 18px;
       border-radius: 999px;
       border: none;
       background: linear-gradient(180deg, #7bb6ff, #4c8cff);
       color: #081526;
-      font-weight: 700;
+      font-weight: 800;
       cursor: pointer;
-      margin-right: 8px;
     }
 
     .post {
-      background: #1b2438;
+      background: #131c2f;
       padding: 18px;
-      border-radius: 16px;
+      border-radius: 20px;
       margin-top: 14px;
       border: 1px solid rgba(255,255,255,0.08);
+      box-shadow: 0 10px 24px rgba(0,0,0,0.12);
+    }
+
+    .post-title {
+      margin: 0 0 8px;
+      font-size: 1.15rem;
+      line-height: 1.4;
+      letter-spacing: -0.02em;
+    }
+
+    .post-body {
+      margin: 0 0 12px;
+      line-height: 1.8;
+      white-space: pre-wrap;
+      word-break: break-word;
+      color: #e8eefc;
     }
 
     .meta {
-      font-size: 0.8rem;
-      color: #aaa;
-      margin-top: 6px;
+      font-size: 0.82rem;
+      color: #9baed4;
+      margin-bottom: 10px;
     }
 
-    .delete {
+    .post-actions,
+    .comment-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
       margin-top: 10px;
-      background: #ff4d4d;
+    }
+
+    .action-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.04);
       color: #fff;
+      cursor: pointer;
+      font-size: 0.92rem;
+      transition: 0.2s ease;
+    }
+
+    .action-btn:hover {
+      background: rgba(255,255,255,0.08);
+    }
+
+    .action-btn.delete-btn {
+      background: rgba(255,80,80,0.1);
+      color: #ffd8d8;
+      border-color: rgba(255,120,120,0.18);
+    }
+
+    .icon-star,
+    .icon-down {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      width: 18px;
+      height: 18px;
+      line-height: 1;
+    }
+
+    .action-btn.liked {
+      border-color: rgba(255,221,77,0.6);
+      background: rgba(255,221,77,0.12);
+      color: #ffe25d;
+    }
+
+    .action-btn.liked .icon-star {
+      color: #ffd84a;
+      text-shadow: 0 0 10px rgba(255,216,74,0.55);
+    }
+
+    .action-btn.disliked {
+      border-color: rgba(123,182,255,0.45);
+      background: rgba(123,182,255,0.12);
+      color: #8fc2ff;
+    }
+
+    .action-btn.disliked .icon-down {
+      color: #8fc2ff;
+      text-shadow: 0 0 10px rgba(143,194,255,0.45);
+    }
+
+    .comments {
+      margin-top: 16px;
+      padding-top: 14px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .comments h4 {
+      margin: 0 0 12px;
+      font-size: 1rem;
+      color: #d9e4ff;
+    }
+
+    .comment-form {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 14px;
+      align-items: stretch;
+    }
+
+    .comment-input {
+      margin: 0;
+      min-height: 48px;
+      height: 48px;
+      resize: none;
+      flex: 1;
+      padding-top: 13px;
+      padding-bottom: 13px;
+    }
+
+    .comment-submit {
+      white-space: nowrap;
+      border: none;
+      border-radius: 14px;
+      background: #2a67ff;
+      color: #fff;
+      font-weight: 800;
+      padding: 0 16px;
+      cursor: pointer;
+    }
+
+    .comment-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .comment {
+      background: rgba(255,255,255,0.035);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 12px 14px;
+    }
+
+    .comment-body {
+      margin: 0 0 8px;
+      line-height: 1.7;
+      color: #edf2ff;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .comment-meta {
+      font-size: 0.78rem;
+      color: #9baed4;
+    }
+
+    .empty {
+      color: #a9b9d8;
+      font-size: 0.95rem;
+      padding: 10px 2px;
+    }
+
+    @media (max-width: 720px) {
+      .wrap {
+        width: min(1100px, calc(100% - 20px));
+        margin-top: 88px;
+      }
+
+      .comment-form {
+        flex-direction: column;
+      }
+
+      .comment-submit {
+        height: 46px;
+      }
     }
   </style>
 </head>
 
 <body>
-
-  <!-- 🔥 이전 버튼 -->
   <a class="back" href="index.html">← 이전으로</a>
 
   <div class="wrap">
     <h1>익명게시판</h1>
 
-    <input id="title" placeholder="제목 입력" />
-    <textarea id="content" placeholder="내용 입력"></textarea>
-    <button id="submitBtn">작성</button>
+    <div class="composer">
+      <input id="title" placeholder="제목 입력" />
+      <textarea id="content" placeholder="내용 입력"></textarea>
+      <button class="primary-btn" id="submitBtn">작성</button>
+    </div>
 
     <div id="postList"></div>
   </div>
 
-  <!-- 🔥 Firebase -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
-    import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc, query, orderBy }
-    from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
+    import {
+      getFirestore,
+      collection,
+      addDoc,
+      onSnapshot,
+      deleteDoc,
+      doc,
+      query,
+      orderBy,
+      updateDoc,
+      increment
+    } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyCwjpn1zXbY3rtNSH6clOgNZ3eYRwjqsqY",
@@ -129,56 +314,265 @@
     const submitBtn = document.getElementById("submitBtn");
     const postList = document.getElementById("postList");
 
-    // 글 작성
+    const POST_REACTION_KEY = "board_post_reactions_v1";
+    const COMMENT_REACTION_KEY = "board_comment_reactions_v1";
+
+    let commentUnsubs = [];
+
+    function loadReactionMap(key) {
+      try {
+        return JSON.parse(localStorage.getItem(key)) || {};
+      } catch {
+        return {};
+      }
+    }
+
+    function saveReactionMap(key, value) {
+      localStorage.setItem(key, JSON.stringify(value));
+    }
+
+    function escapeHtml(text) {
+      return String(text)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    function formatDate(timestamp) {
+      if (!timestamp) return "";
+      return new Date(timestamp).toLocaleString();
+    }
+
+    function getReactionClass(state, type) {
+      if (state === "like" && type === "like") return "liked";
+      if (state === "dislike" && type === "dislike") return "disliked";
+      return "";
+    }
+
+    async function applyReaction({ docRef, storageKey, itemId, nextState }) {
+      const map = loadReactionMap(storageKey);
+      const prevState = map[itemId] || "none";
+
+      let likeDelta = 0;
+      let dislikeDelta = 0;
+
+      if (prevState === nextState) {
+        if (nextState === "like") likeDelta -= 1;
+        if (nextState === "dislike") dislikeDelta -= 1;
+        map[itemId] = "none";
+      } else {
+        if (prevState === "like") likeDelta -= 1;
+        if (prevState === "dislike") dislikeDelta -= 1;
+        if (nextState === "like") likeDelta += 1;
+        if (nextState === "dislike") dislikeDelta += 1;
+        map[itemId] = nextState;
+      }
+
+      saveReactionMap(storageKey, map);
+
+      const updatePayload = {};
+      if (likeDelta !== 0) updatePayload.likes = increment(likeDelta);
+      if (dislikeDelta !== 0) updatePayload.dislikes = increment(dislikeDelta);
+
+      if (Object.keys(updatePayload).length > 0) {
+        await updateDoc(docRef, updatePayload);
+      }
+    }
+
     async function createPost() {
       const title = titleInput.value.trim();
       const content = contentInput.value.trim();
 
       if (!title || !content) {
-        alert("내용을 입력하세요");
+        alert("제목과 내용을 입력하세요.");
         return;
       }
 
       await addDoc(collection(db, "posts"), {
         title,
         content,
-        createdAt: Date.now()
+        createdAt: Date.now(),
+        likes: 0,
+        dislikes: 0
       });
 
       titleInput.value = "";
       contentInput.value = "";
     }
 
-    submitBtn.onclick = createPost;
+    submitBtn.addEventListener("click", createPost);
 
-    // 실시간 데이터
-    const q = query(collection(db, "posts"), orderBy("createdAt", "desc"));
+    function cleanupCommentListeners() {
+      commentUnsubs.forEach(unsub => unsub());
+      commentUnsubs = [];
+    }
 
-    onSnapshot(q, (snapshot) => {
+    function attachComments(postId, container) {
+      const commentsRef = collection(db, "posts", postId, "comments");
+      const q = query(commentsRef, orderBy("createdAt", "asc"));
+
+      const unsub = onSnapshot(q, (snapshot) => {
+        const list = container.querySelector(".comment-list");
+        list.innerHTML = "";
+
+        if (snapshot.empty) {
+          list.innerHTML = `<div class="empty">아직 댓글이 없습니다.</div>`;
+          return;
+        }
+
+        const reactionMap = loadReactionMap(COMMENT_REACTION_KEY);
+
+        snapshot.forEach((commentSnap) => {
+          const comment = commentSnap.data();
+          const commentId = commentSnap.id;
+          const itemId = `${postId}__${commentId}`;
+          const reactionState = reactionMap[itemId] || "none";
+
+          const el = document.createElement("div");
+          el.className = "comment";
+
+          el.innerHTML = `
+            <p class="comment-body">${escapeHtml(comment.content)}</p>
+            <div class="comment-meta">익명 · ${formatDate(comment.createdAt)}</div>
+            <div class="comment-actions">
+              <button class="action-btn ${getReactionClass(reactionState, "like")}" data-type="comment-like">
+                <span class="icon-star">★</span>
+                <span>${comment.likes || 0}</span>
+              </button>
+              <button class="action-btn ${getReactionClass(reactionState, "dislike")}" data-type="comment-dislike">
+                <span class="icon-down">↓</span>
+                <span>${comment.dislikes || 0}</span>
+              </button>
+              <button class="action-btn delete-btn" data-type="comment-delete">삭제</button>
+            </div>
+          `;
+
+          const commentRef = doc(db, "posts", postId, "comments", commentId);
+
+          el.querySelector('[data-type="comment-like"]').addEventListener("click", async () => {
+            await applyReaction({
+              docRef: commentRef,
+              storageKey: COMMENT_REACTION_KEY,
+              itemId,
+              nextState: "like"
+            });
+          });
+
+          el.querySelector('[data-type="comment-dislike"]').addEventListener("click", async () => {
+            await applyReaction({
+              docRef: commentRef,
+              storageKey: COMMENT_REACTION_KEY,
+              itemId,
+              nextState: "dislike"
+            });
+          });
+
+          el.querySelector('[data-type="comment-delete"]').addEventListener("click", async () => {
+            await deleteDoc(commentRef);
+          });
+
+          list.appendChild(el);
+        });
+      });
+
+      commentUnsubs.push(unsub);
+
+      const commentInput = container.querySelector(".comment-input");
+      const commentSubmit = container.querySelector(".comment-submit");
+
+      commentSubmit.addEventListener("click", async () => {
+        const value = commentInput.value.trim();
+        if (!value) return;
+
+        await addDoc(collection(db, "posts", postId, "comments"), {
+          content: value,
+          createdAt: Date.now(),
+          likes: 0,
+          dislikes: 0
+        });
+
+        commentInput.value = "";
+      });
+    }
+
+    const postsQuery = query(collection(db, "posts"), orderBy("createdAt", "desc"));
+
+    onSnapshot(postsQuery, (snapshot) => {
+      cleanupCommentListeners();
       postList.innerHTML = "";
+
+      if (snapshot.empty) {
+        postList.innerHTML = `<div class="empty">아직 작성된 게시글이 없습니다.</div>`;
+        return;
+      }
+
+      const postReactionMap = loadReactionMap(POST_REACTION_KEY);
 
       snapshot.forEach((docSnap) => {
         const post = docSnap.data();
-        const id = docSnap.id;
+        const postId = docSnap.id;
+        const reactionState = postReactionMap[postId] || "none";
 
         const div = document.createElement("div");
         div.className = "post";
 
         div.innerHTML = `
-          <strong>${post.title}</strong>
-          <p>${post.content}</p>
-          <div class="meta">${new Date(post.createdAt).toLocaleString()}</div>
-          <button class="delete">삭제</button>
+          <h3 class="post-title">${escapeHtml(post.title)}</h3>
+          <p class="post-body">${escapeHtml(post.content)}</p>
+          <div class="meta">익명 · ${formatDate(post.createdAt)}</div>
+
+          <div class="post-actions">
+            <button class="action-btn ${getReactionClass(reactionState, "like")}" data-type="post-like">
+              <span class="icon-star">★</span>
+              <span>${post.likes || 0}</span>
+            </button>
+            <button class="action-btn ${getReactionClass(reactionState, "dislike")}" data-type="post-dislike">
+              <span class="icon-down">↓</span>
+              <span>${post.dislikes || 0}</span>
+            </button>
+            <button class="action-btn delete-btn" data-type="post-delete">삭제</button>
+          </div>
+
+          <div class="comments">
+            <h4>댓글</h4>
+            <div class="comment-form">
+              <textarea class="comment-input" placeholder="댓글 입력"></textarea>
+              <button class="comment-submit" type="button">댓글 등록</button>
+            </div>
+            <div class="comment-list"></div>
+          </div>
         `;
 
-        div.querySelector(".delete").onclick = async () => {
-          await deleteDoc(doc(db, "posts", id));
-        };
+        const postRef = doc(db, "posts", postId);
+
+        div.querySelector('[data-type="post-like"]').addEventListener("click", async () => {
+          await applyReaction({
+            docRef: postRef,
+            storageKey: POST_REACTION_KEY,
+            itemId: postId,
+            nextState: "like"
+          });
+        });
+
+        div.querySelector('[data-type="post-dislike"]').addEventListener("click", async () => {
+          await applyReaction({
+            docRef: postRef,
+            storageKey: POST_REACTION_KEY,
+            itemId: postId,
+            nextState: "dislike"
+          });
+        });
+
+        div.querySelector('[data-type="post-delete"]').addEventListener("click", async () => {
+          await deleteDoc(postRef);
+        });
 
         postList.appendChild(div);
+        attachComments(postId, div);
       });
     });
   </script>
-
 </body>
 </html>
