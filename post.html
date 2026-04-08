@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>게시글</title>
+
+<style>
+body {
+  margin:0;
+  font-family:sans-serif;
+}
+
+.wrap {
+  width:800px;
+  margin:60px auto;
+}
+
+.star {
+  color:gray;
+  cursor:pointer;
+}
+
+.star.active {
+  color:gold;
+}
+
+.down {
+  cursor:pointer;
+}
+
+.comment {
+  border-top:1px solid #ddd;
+  padding:8px 0;
+}
+</style>
+</head>
+
+<body>
+
+<div class="wrap">
+<a href="board.html">← 목록</a>
+
+<h2 id="title"></h2>
+<p id="content"></p>
+
+<div>
+<span class="star" id="like">★</span>
+<span id="likeCount"></span>
+
+<span class="down" id="dislike">↓</span>
+<span id="dislikeCount"></span>
+</div>
+
+<hr>
+
+<h3>댓글</h3>
+
+<textarea id="commentInput"></textarea>
+<button onclick="addComment()">등록</button>
+
+<div id="comments"></div>
+
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
+import {
+ getFirestore, doc, getDoc,
+ updateDoc, increment,
+ collection, addDoc,
+ onSnapshot, query, orderBy
+}
+from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
+
+const firebaseConfig = {
+ apiKey: "AIzaSy...",
+ authDomain: "socialmissionproject.firebaseapp.com",
+ projectId: "socialmissionproject",
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+const id = new URLSearchParams(location.search).get("id");
+
+const postRef = doc(db,"posts",id);
+
+const snap = await getDoc(postRef);
+const data = snap.data();
+
+document.getElementById("title").innerText = data.title;
+document.getElementById("content").innerText = data.content;
+
+const likeBtn = document.getElementById("like");
+const dislikeBtn = document.getElementById("dislike");
+
+document.getElementById("likeCount").innerText = data.likes||0;
+document.getElementById("dislikeCount").innerText = data.dislikes||0;
+
+likeBtn.onclick = async()=>{
+ await updateDoc(postRef,{likes: increment(1)});
+ likeBtn.classList.add("active");
+};
+
+dislikeBtn.onclick = async()=>{
+ await updateDoc(postRef,{dislikes: increment(1)});
+};
+
+const commentRef = collection(db,"posts",id,"comments");
+
+window.addComment = async()=>{
+ const text = document.getElementById("commentInput").value;
+ await addDoc(commentRef,{
+  content:text,
+  createdAt:Date.now(),
+  likes:0,
+  dislikes:0
+ });
+};
+
+onSnapshot(query(commentRef, orderBy("createdAt")), snap=>{
+ const box = document.getElementById("comments");
+ box.innerHTML="";
+
+ snap.forEach(doc=>{
+  const d = doc.data();
+
+  const div = document.createElement("div");
+  div.className="comment";
+
+  div.innerHTML = `
+    ${d.content}<br>
+    ★ ${d.likes||0} ↓ ${d.dislikes||0}
+  `;
+
+  box.appendChild(div);
+ });
+});
+</script>
+
+</body>
+</html>
