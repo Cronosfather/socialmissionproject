@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>마약 전후 비교 사진</title>
+  <style>
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: "Pretendard", "Noto Sans KR", Arial, sans-serif;
+      background: #ffffff;
+      color: #111;
+    }
+
+    .back {
+      position: fixed;
+      top: 18px;
+      left: 18px;
+      z-index: 100;
+      padding: 12px 16px;
+      border-radius: 999px;
+      background: rgba(0,0,0,0.72);
+      color: #fff;
+      text-decoration: none;
+      font-weight: 700;
+      border: 1px solid rgba(255,255,255,0.16);
+      backdrop-filter: blur(8px);
+    }
+
+    .hero {
+      position: sticky;
+      top: 0;
+      height: 56vh;
+      min-height: 360px;
+      overflow: hidden;
+      color: #fff;
+      background: linear-gradient(180deg, #7a1fff 0%, #3e0b84 100%);
+    }
+
+    .fill {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, #7a1fff 0%, #3e0b84 100%);
+      transform: translateY(0%);
+      will-change: transform;
+    }
+
+    .hero-inner {
+      position: relative;
+      z-index: 2;
+      padding: 88px 40px 30px;
+    }
+
+    .small {
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin-bottom: 22px;
+      letter-spacing: -0.03em;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2.2rem, 5vw, 4.5rem);
+      line-height: 1.03;
+      letter-spacing: -0.05em;
+      max-width: 980px;
+    }
+
+    .content {
+      position: relative;
+      z-index: 2;
+      background: #fff;
+      padding: 44px 0 90px;
+    }
+
+    .box {
+      width: min(1180px, calc(100% - 40px));
+      margin: 0 auto;
+      background: #fff;
+      border: 1px solid rgba(0,0,0,0.08);
+      border-radius: 24px;
+      box-shadow: 0 18px 50px rgba(0,0,0,0.15);
+      padding: 34px 28px;
+    }
+
+    .intro {
+      margin-bottom: 28px;
+      padding: 22px 20px;
+      background: #f7f2ff;
+      border: 1px solid rgba(122,31,255,0.14);
+      border-radius: 18px;
+      line-height: 1.9;
+      font-size: 1rem;
+      color: #222;
+    }
+
+    .compare-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 20px;
+    }
+
+    .compare-card {
+      background: #fff;
+      border: 1px solid rgba(0,0,0,0.08);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 10px 24px rgba(0,0,0,0.06);
+      transition: transform 0.22s ease, box-shadow 0.22s ease;
+    }
+
+    .compare-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 18px 34px rgba(0,0,0,0.10);
+    }
+
+    .compare-image-wrap {
+      background: #f3f3f3;
+      aspect-ratio: 4 / 5;
+      overflow: hidden;
+    }
+
+    .compare-image-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .compare-info {
+      padding: 16px 16px 18px;
+    }
+
+    .compare-info h2 {
+      margin: 0 0 8px;
+      font-size: 1.18rem;
+      line-height: 1.3;
+      letter-spacing: -0.03em;
+      color: #4b129f;
+    }
+
+    .compare-info p {
+      margin: 0;
+      font-size: 0.96rem;
+      line-height: 1.75;
+      color: #333;
+      word-break: keep-all;
+    }
+
+    @media (max-width: 980px) {
+      .compare-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .hero-inner {
+        padding: 88px 22px 24px;
+      }
+
+      .box {
+        width: min(1180px, calc(100% - 20px));
+        padding: 22px 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a class="back" href="index.html">← 이전으로</a>
+
+  <section class="hero" id="hero">
+    <div class="fill" id="fill"></div>
+    <div class="hero-inner">
+      <div class="small">마약 전후 비교 사진</div>
+      <h1>약물 사용 전후 변화 비교</h1>
+    </div>
+  </section>
+
+  <section class="content">
+    <div class="box">
+      <div class="intro">
+        이 화면은 약물 사용 전후의 외형적·신체적 변화를 시각적으로 비교하기 위한 공간입니다.
+        아래 카드에 들어가는 제목과 설명은 필요에 따라 직접 수정해서 사용하시면 됩니다.
+      </div>
+
+      <div class="compare-grid">
+        <article class="compare-card">
+          <div class="compare-image-wrap">
+            <img src="drug1.png" alt="마약 전후 비교 사진 1" />
+          </div>
+          <div class="compare-info">
+            <h2>비교 사진 1</h2>
+            <p>이 영역에는 첫 번째 비교 사진에 대한 설명을 넣으시면 됩니다. 예를 들어 피부 변화, 표정 변화, 체형 변화 등 관찰 포인트를 정리할 수 있습니다.</p>
+          </div>
+        </article>
+
+        <article class="compare-card">
+          <div class="compare-image-wrap">
+            <img src="drug2.png" alt="마약 전후 비교 사진 2" />
+          </div>
+          <div class="compare-info">
+            <h2>비교 사진 2</h2>
+            <p>이 영역에는 두 번째 비교 사진 설명을 넣으시면 됩니다. 약물 사용 전후의 시각적 차이, 건강 악화 양상, 경고 메시지 등을 정리하기 좋습니다.</p>
+          </div>
+        </article>
+
+        <article class="compare-card">
+          <div class="compare-image-wrap">
+            <img src="drug3.png" alt="마약 전후 비교 사진 3" />
+          </div>
+          <div class="compare-info">
+            <h2>비교 사진 3</h2>
+            <p>이 영역에는 세 번째 비교 사진 설명을 넣으시면 됩니다. 발표용이라면 핵심 변화만 짧고 강하게 쓰는 것이 가장 효과적입니다.</p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    const hero = document.getElementById('hero');
+    const fill = document.getElementById('fill');
+
+    function updateFill() {
+      const rect = hero.getBoundingClientRect();
+      const h = hero.offsetHeight || 1;
+      const progress = Math.min(Math.max(-rect.top / h, 0), 1);
+      fill.style.transform = `translateY(${-progress * 100}%)`;
+    }
+
+    window.addEventListener('scroll', updateFill, { passive: true });
+    window.addEventListener('resize', updateFill);
+    updateFill();
+  </script>
+</body>
+</html>
