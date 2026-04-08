@@ -7,12 +7,14 @@
   <style>
     * { box-sizing: border-box; }
     html { scroll-behavior: smooth; }
+
     body {
       margin: 0;
       font-family: "Pretendard", "Noto Sans KR", Arial, sans-serif;
       background: #ffffff;
       color: #111;
     }
+
     .back {
       position: fixed;
       top: 18px;
@@ -27,6 +29,7 @@
       border: 1px solid rgba(255,255,255,0.16);
       backdrop-filter: blur(8px);
     }
+
     .hero {
       position: sticky;
       top: 0;
@@ -36,6 +39,7 @@
       color: #fff;
       background: linear-gradient(180deg, #22be57 0%, #0d6d2e 100%);
     }
+
     .fill {
       position: absolute;
       inset: 0;
@@ -43,29 +47,34 @@
       transform: translateY(0%);
       will-change: transform;
     }
+
     .hero-inner {
       position: relative;
       z-index: 2;
       padding: 88px 40px 30px;
     }
+
     .small {
       font-size: 0.95rem;
       font-weight: 700;
       margin-bottom: 22px;
       letter-spacing: -0.03em;
     }
+
     h1 {
       margin: 0;
       font-size: clamp(2.2rem, 5vw, 4.6rem);
       line-height: 1.03;
       letter-spacing: -0.05em;
     }
+
     .content {
       position: relative;
       z-index: 2;
       background: #fff;
       padding: 44px 0 90px;
     }
+
     .box {
       width: min(980px, calc(100% - 40px));
       margin: 0 auto;
@@ -75,11 +84,52 @@
       box-shadow: 0 18px 50px rgba(0,0,0,0.15);
       padding: 34px 28px;
     }
+
     p {
       margin: 0 0 18px;
       line-height: 1.95;
       font-size: 1rem;
       word-break: keep-all;
+    }
+
+    .graph-box {
+      margin: 28px 0;
+      padding: 18px;
+      border-radius: 18px;
+      border: 1px solid rgba(0,0,0,0.08);
+      background: #fafafa;
+    }
+
+    .graph-box img {
+      width: 100%;
+      border-radius: 12px;
+      display: block;
+    }
+
+    .graph-caption {
+      margin-top: 10px;
+      font-size: 0.9rem;
+      color: #555;
+      line-height: 1.6;
+    }
+
+    .graph-caption strong {
+      color: #0d6d2e;
+    }
+
+    @media (max-width: 720px) {
+      .hero-inner {
+        padding: 88px 22px 24px;
+      }
+
+      .box {
+        width: min(980px, calc(100% - 20px));
+        padding: 24px 18px;
+      }
+
+      .graph-box {
+        padding: 14px;
+      }
     }
   </style>
 </head>
@@ -97,7 +147,23 @@
   <section class="content">
     <div class="box">
       <p>마약 문제는 개인의 선택을 넘어 신체적·정신적 건강을 심각하게 위협하는 사회적 문제이다. 마약은 중독을 일으켜 뇌 기능을 손상시키고, 우울증·불안장애와 같은 정신 건강 문제를 유발하며, 심한 경우 생명까지 위협할 수 있다. 이는 모든 사람이 건강한 삶을 누릴 권리를 강조하는 SDGs 3번 ‘건강과 웰빙’의 목표와 직접적으로 연결된다.</p>
+
+      <div class="graph-box">
+        <img src="graph1.png" alt="마약 관련 통계 그래프 1" />
+        <div class="graph-caption">
+          <strong>그래프 1.</strong> 마약 사용 증가 추세를 나타낸 자료로, 최근 몇 년간 청소년 및 일반 인구에서 마약 노출이 증가하고 있음을 보여준다.
+        </div>
+      </div>
+
       <p>특히 청소년기는 호기심과 또래 영향으로 인해 마약에 노출될 가능성이 존재하는 시기이기 때문에, 예방 교육과 올바른 정보 제공이 매우 중요하다. 마약 사용이 시작된 이후의 치료보다, 사전에 위험성을 인식하고 차단하는 예방 활동이 훨씬 효과적이며 사회적 비용도 줄일 수 있다.</p>
+
+      <div class="graph-box">
+        <img src="graph2.png" alt="마약 영향 관련 그래프 2" />
+        <div class="graph-caption">
+          <strong>그래프 2.</strong> 마약 사용이 신체 및 정신 건강에 미치는 영향을 시각화한 자료로, 중독과 건강 악화 사이의 높은 상관관계를 보여준다.
+        </div>
+      </div>
+
       <p>따라서 마약 예방 프로젝트를 통해 마약의 위험성을 알리고 건강한 생활 습관을 형성하도록 돕는 것은 개인의 삶의 질을 높일 뿐만 아니라, 사회 전체의 건강 수준을 향상시키는 데 기여한다. 이러한 점에서 본 프로젝트는 SDGs 3번의 목표를 실천하는 의미 있는 활동이라고 판단하여 주제로 선정하였다.</p>
     </div>
   </section>
