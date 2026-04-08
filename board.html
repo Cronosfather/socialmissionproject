@@ -6,72 +6,106 @@
   <title>익명게시판</title>
 
   <style>
+    * { box-sizing: border-box; }
+
     body {
       margin: 0;
-      font-family: "Pretendard", sans-serif;
+      font-family: "Pretendard", "Noto Sans KR", Arial, sans-serif;
       background: #0b1220;
       color: #fff;
     }
 
+    /* 🔥 이전 버튼 */
+    .back {
+      position: fixed;
+      top: 18px;
+      left: 18px;
+      z-index: 100;
+      padding: 12px 16px;
+      border-radius: 999px;
+      background: rgba(0,0,0,0.6);
+      color: #fff;
+      text-decoration: none;
+      font-weight: 700;
+      border: 1px solid rgba(255,255,255,0.15);
+      backdrop-filter: blur(8px);
+    }
+
     .wrap {
       width: min(1000px, 90%);
-      margin: 80px auto;
+      margin: 100px auto 60px;
     }
 
     h1 {
       margin-bottom: 20px;
+      font-size: 2rem;
     }
 
     input, textarea {
       width: 100%;
-      margin-bottom: 10px;
-      padding: 12px;
-      border-radius: 10px;
+      margin-bottom: 12px;
+      padding: 14px;
+      border-radius: 14px;
       border: none;
       background: #1b2438;
       color: #fff;
+      font-size: 1rem;
+    }
+
+    textarea {
+      min-height: 160px;
+      resize: vertical;
     }
 
     button {
-      padding: 10px 16px;
-      border-radius: 10px;
+      padding: 12px 18px;
+      border-radius: 999px;
       border: none;
-      background: #4c8cff;
-      color: #fff;
+      background: linear-gradient(180deg, #7bb6ff, #4c8cff);
+      color: #081526;
+      font-weight: 700;
       cursor: pointer;
+      margin-right: 8px;
     }
 
     .post {
       background: #1b2438;
-      padding: 16px;
-      border-radius: 12px;
-      margin-top: 12px;
+      padding: 18px;
+      border-radius: 16px;
+      margin-top: 14px;
+      border: 1px solid rgba(255,255,255,0.08);
     }
 
     .meta {
-      font-size: 12px;
+      font-size: 0.8rem;
       color: #aaa;
+      margin-top: 6px;
     }
 
     .delete {
       margin-top: 10px;
       background: #ff4d4d;
+      color: #fff;
     }
   </style>
 </head>
 
 <body>
+
+  <!-- 🔥 이전 버튼 -->
+  <a class="back" href="index.html">← 이전으로</a>
+
   <div class="wrap">
     <h1>익명게시판</h1>
 
-    <input id="title" placeholder="제목" />
-    <textarea id="content" placeholder="내용"></textarea>
+    <input id="title" placeholder="제목 입력" />
+    <textarea id="content" placeholder="내용 입력"></textarea>
     <button id="submitBtn">작성</button>
 
     <div id="postList"></div>
   </div>
 
-  <!-- 🔥 Firebase 시작 -->
+  <!-- 🔥 Firebase -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
     import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc, query, orderBy }
@@ -101,7 +135,7 @@
       const content = contentInput.value.trim();
 
       if (!title || !content) {
-        alert("입력하세요");
+        alert("내용을 입력하세요");
         return;
       }
 
@@ -117,7 +151,7 @@
 
     submitBtn.onclick = createPost;
 
-    // 실시간 게시글 불러오기
+    // 실시간 데이터
     const q = query(collection(db, "posts"), orderBy("createdAt", "desc"));
 
     onSnapshot(q, (snapshot) => {
@@ -131,7 +165,7 @@
         div.className = "post";
 
         div.innerHTML = `
-          <h3>${post.title}</h3>
+          <strong>${post.title}</strong>
           <p>${post.content}</p>
           <div class="meta">${new Date(post.createdAt).toLocaleString()}</div>
           <button class="delete">삭제</button>
@@ -145,5 +179,6 @@
       });
     });
   </script>
+
 </body>
 </html>
