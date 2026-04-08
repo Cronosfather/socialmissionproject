@@ -5,50 +5,187 @@
 <title>게시글</title>
 
 <style>
-body {
-  margin:0;
-  font-family:sans-serif;
-  background:#0b1220;
-  color:#fff;
-}
+  body {
+    margin: 0;
+    font-family: "Pretendard", "Noto Sans KR", Arial, sans-serif;
+    background: #0b1220;
+    color: #fff;
+  }
 
-.back {
-  position:fixed;
-  top:15px;
-  left:15px;
-  padding:10px 16px;
-  border-radius:999px;
-  background:#0008;
-  color:#fff;
-  text-decoration:none;
-}
+  .back {
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    padding: 10px 16px;
+    border-radius: 999px;
+    background: rgba(0,0,0,0.5);
+    color: #fff;
+    text-decoration: none;
+    font-weight: 700;
+    border: 1px solid rgba(255,255,255,0.14);
+    backdrop-filter: blur(8px);
+  }
 
-.wrap {
-  width:800px;
-  margin:80px auto;
-}
+  .wrap {
+    width: min(800px, calc(100% - 24px));
+    margin: 80px auto;
+  }
 
-.box {
-  background:#1b2438;
-  padding:20px;
-  border-radius:20px;
-}
+  .box {
+    background: #1b2438;
+    padding: 20px;
+    border-radius: 20px;
+    margin-bottom: 18px;
+    box-shadow: 0 12px 28px rgba(0,0,0,0.18);
+  }
 
-.big-btn {
-  font-size:24px;
-  cursor:pointer;
-  margin-right:10px;
-}
+  h2 {
+    margin: 0 0 12px;
+    font-size: 1.8rem;
+    letter-spacing: -0.03em;
+  }
 
-.star.active {
-  color:gold;
-}
+  .body-text {
+    line-height: 1.9;
+    white-space: pre-wrap;
+    word-break: break-word;
+    color: #eef3ff;
+  }
 
-.comment {
-  margin-top:10px;
-  padding:10px;
-  border-top:1px solid #555;
-}
+  .meta {
+    margin-top: 12px;
+    color: #a9b8d6;
+    font-size: 0.86rem;
+  }
+
+  .reaction-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-top: 18px;
+    flex-wrap: wrap;
+  }
+
+  .big-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 28px;
+    line-height: 1;
+    cursor: pointer;
+    padding: 10px 14px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    user-select: none;
+  }
+
+  .big-btn.disabled {
+    opacity: 0.58;
+  }
+
+  .star {
+    color: #c5cad7;
+  }
+
+  .star.active {
+    color: #ffd84a;
+    text-shadow: 0 0 10px rgba(255,216,74,0.4);
+  }
+
+  .down {
+    color: #b7c9ef;
+    font-weight: 700;
+  }
+
+  .count {
+    font-size: 1rem;
+    color: #fff;
+    min-width: 20px;
+    text-align: left;
+  }
+
+  textarea {
+    width: 100%;
+    padding: 12px;
+    border-radius: 12px;
+    border: none;
+    margin-bottom: 10px;
+    background: #111827;
+    color: #fff;
+    font: inherit;
+    outline: none;
+    min-height: 110px;
+    resize: vertical;
+    line-height: 1.7;
+  }
+
+  textarea::placeholder {
+    color: #9fb0d1;
+  }
+
+  button {
+    padding: 10px 14px;
+    border-radius: 999px;
+    border: none;
+    background: #4c8cff;
+    color: #fff;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  .comment {
+    margin-top: 12px;
+    padding: 14px;
+    border-top: 1px solid rgba(255,255,255,0.12);
+  }
+
+  .comment:first-child {
+    margin-top: 0;
+  }
+
+  .comment-body {
+    line-height: 1.8;
+    white-space: pre-wrap;
+    word-break: break-word;
+    color: #edf2ff;
+  }
+
+  .comment-meta {
+    margin-top: 8px;
+    color: #9fb0d1;
+    font-size: 0.82rem;
+  }
+
+  .comment-like-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+  }
+
+  .comment-like-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 20px;
+    cursor: pointer;
+    padding: 8px 12px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    user-select: none;
+  }
+
+  .comment-like-btn.active {
+    color: #ffd84a;
+    border-color: rgba(255,216,74,0.35);
+    background: rgba(255,216,74,0.08);
+  }
+
+  .comment-like-btn.disabled {
+    opacity: 0.58;
+  }
 </style>
 </head>
 
@@ -58,120 +195,231 @@ body {
 
 <div class="wrap">
 
-<div class="box">
-<h2 id="title"></h2>
-<p id="content"></p>
+  <div class="box">
+    <h2 id="title"></h2>
+    <div class="body-text" id="content"></div>
+    <div class="meta" id="postMeta"></div>
 
-<div>
-<span class="big-btn star" id="like">★</span>
-<span id="likeCount"></span>
+    <div class="reaction-row">
+      <div class="big-btn" id="likeBtn" title="추천">
+        <span class="star" id="likeStar">★</span>
+        <span class="count" id="likeCount">0</span>
+      </div>
 
-<span class="big-btn" id="dislike">↓</span>
-<span id="dislikeCount"></span>
-</div>
-</div>
+      <div class="big-btn" id="dislikeBtn" title="비추천">
+        <span class="down">↓</span>
+        <span class="count" id="dislikeCount">0</span>
+      </div>
+    </div>
+  </div>
 
-<div class="box">
-<h3>댓글</h3>
-
-<textarea id="commentInput"></textarea>
-<button onclick="addComment()">등록</button>
-
-<div id="comments"></div>
-</div>
+  <div class="box">
+    <h3>댓글</h3>
+    <textarea id="commentInput" placeholder="댓글을 입력하세요"></textarea>
+    <button onclick="addComment()">등록</button>
+    <div id="comments" style="margin-top:16px;"></div>
+  </div>
 
 </div>
 
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
-import {
- getFirestore, doc, getDoc,
- updateDoc, increment,
- collection, addDoc,
- onSnapshot
-}
-from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
+  import {
+    getFirestore, doc, getDoc,
+    updateDoc, increment,
+    collection, addDoc,
+    onSnapshot, query, orderBy
+  } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
 
-const firebaseConfig = {
- apiKey: "AIzaSy...",
- authDomain: "socialmissionproject.firebaseapp.com",
- projectId: "socialmissionproject",
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
-const id = new URLSearchParams(location.search).get("id");
-const postRef = doc(db,"posts",id);
-
-const snap = await getDoc(postRef);
-const data = snap.data();
-
-document.getElementById("title").innerText=data.title;
-document.getElementById("content").innerText=data.content;
-
-const likeBtn=document.getElementById("like");
-const dislikeBtn=document.getElementById("dislike");
-
-const likeCount=document.getElementById("likeCount");
-const dislikeCount=document.getElementById("dislikeCount");
-
-likeCount.innerText=data.likes||0;
-dislikeCount.innerText=data.dislikes||0;
-
-/* 즉시 반응 */
-likeBtn.onclick=async()=>{
- likeCount.innerText=parseInt(likeCount.innerText)+1;
- likeBtn.classList.add("active");
- await updateDoc(postRef,{likes:increment(1)});
-};
-
-dislikeBtn.onclick=async()=>{
- dislikeCount.innerText=parseInt(dislikeCount.innerText)+1;
- await updateDoc(postRef,{dislikes:increment(1)});
-};
-
-/* 댓글 */
-const commentRef=collection(db,"posts",id,"comments");
-
-window.addComment=async()=>{
- const text=document.getElementById("commentInput").value;
- await addDoc(commentRef,{
-  content:text,
-  createdAt:Date.now(),
-  likes:0
- });
-};
-
-/* 댓글 표시 + 좋아요 */
-onSnapshot(commentRef,snap=>{
- const box=document.getElementById("comments");
- box.innerHTML="";
-
- snap.forEach(doc=>{
-  const d=doc.data();
-
-  const div=document.createElement("div");
-  div.className="comment";
-
-  const likeId="c_like_"+doc.id;
-
-  div.innerHTML=`
-    ${d.content}<br>
-    <span class="big-btn star" id="${likeId}">★</span>
-    <span id="count_${doc.id}">${d.likes||0}</span>
-  `;
-
-  div.querySelector("#"+likeId).onclick=async()=>{
-    const countEl=document.getElementById("count_"+doc.id);
-    countEl.innerText=parseInt(countEl.innerText)+1;
-
-    await updateDoc(doc.ref,{likes:increment(1)});
+  const firebaseConfig = {
+    apiKey: "AIzaSyCwjpn1zXbY3rtNSH6clOgNZ3eYRwjqsqY",
+    authDomain: "socialmissionproject.firebaseapp.com",
+    projectId: "socialmissionproject",
+    storageBucket: "socialmissionproject.firebasestorage.app",
+    messagingSenderId: "347247388589",
+    appId: "1:347247388589:web:781261d448feb5afbce324",
+    measurementId: "G-DX93ZMJB15"
   };
 
-  box.appendChild(div);
- });
-});
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  const POST_REACTION_KEY = "dc_style_post_reactions_v1";
+  const COMMENT_REACTION_KEY = "dc_style_comment_like_v1";
+
+  const id = new URLSearchParams(location.search).get("id");
+  const postRef = doc(db, "posts", id);
+
+  const titleEl = document.getElementById("title");
+  const contentEl = document.getElementById("content");
+  const postMetaEl = document.getElementById("postMeta");
+
+  const likeBtn = document.getElementById("likeBtn");
+  const dislikeBtn = document.getElementById("dislikeBtn");
+  const likeStar = document.getElementById("likeStar");
+  const likeCount = document.getElementById("likeCount");
+  const dislikeCount = document.getElementById("dislikeCount");
+
+  function loadMap(key) {
+    try {
+      return JSON.parse(localStorage.getItem(key)) || {};
+    } catch {
+      return {};
+    }
+  }
+
+  function saveMap(key, value) {
+    localStorage.setItem(key, JSON.stringify(value));
+  }
+
+  function getPostReactionState() {
+    const map = loadMap(POST_REACTION_KEY);
+    return map[id] || "none";
+  }
+
+  function setPostReactionState(value) {
+    const map = loadMap(POST_REACTION_KEY);
+    map[id] = value;
+    saveMap(POST_REACTION_KEY, map);
+  }
+
+  function getCommentLikedState(commentId) {
+    const map = loadMap(COMMENT_REACTION_KEY);
+    return !!map[`${id}__${commentId}`];
+  }
+
+  function setCommentLikedState(commentId, value) {
+    const map = loadMap(COMMENT_REACTION_KEY);
+    map[`${id}__${commentId}`] = value;
+    saveMap(COMMENT_REACTION_KEY, map);
+  }
+
+  function applyPostReactionUI(state) {
+    likeBtn.classList.remove("disabled");
+    dislikeBtn.classList.remove("disabled");
+    likeStar.classList.remove("active");
+
+    if (state === "like") {
+      likeStar.classList.add("active");
+      dislikeBtn.classList.add("disabled");
+    } else if (state === "dislike") {
+      likeBtn.classList.add("disabled");
+    }
+  }
+
+  const snap = await getDoc(postRef);
+  const data = snap.data();
+
+  titleEl.innerText = data.title;
+  contentEl.innerText = data.content;
+  likeCount.innerText = data.likes || 0;
+  dislikeCount.innerText = data.dislikes || 0;
+  postMetaEl.innerText = new Date(data.createdAt).toLocaleString();
+
+  applyPostReactionUI(getPostReactionState());
+
+  likeBtn.onclick = async () => {
+    const state = getPostReactionState();
+    if (state !== "none") {
+      alert("이 브라우저에서는 이미 추천 또는 비추천을 눌렀습니다.");
+      return;
+    }
+
+    likeCount.innerText = String(parseInt(likeCount.innerText, 10) + 1);
+    setPostReactionState("like");
+    applyPostReactionUI("like");
+    await updateDoc(postRef, { likes: increment(1) });
+  };
+
+  dislikeBtn.onclick = async () => {
+    const state = getPostReactionState();
+    if (state !== "none") {
+      alert("이 브라우저에서는 이미 추천 또는 비추천을 눌렀습니다.");
+      return;
+    }
+
+    dislikeCount.innerText = String(parseInt(dislikeCount.innerText, 10) + 1);
+    setPostReactionState("dislike");
+    applyPostReactionUI("dislike");
+    await updateDoc(postRef, { dislikes: increment(1) });
+  };
+
+  const commentRef = collection(db, "posts", id, "comments");
+
+  window.addComment = async () => {
+    const text = document.getElementById("commentInput").value.trim();
+    if (!text) {
+      alert("댓글 내용을 입력하세요.");
+      return;
+    }
+
+    await addDoc(commentRef, {
+      content: text,
+      createdAt: Date.now(),
+      likes: 0
+    });
+
+    document.getElementById("commentInput").value = "";
+  };
+
+  onSnapshot(query(commentRef, orderBy("createdAt")), (snap) => {
+    const box = document.getElementById("comments");
+    box.innerHTML = "";
+
+    if (snap.empty) {
+      box.innerHTML = `<div class="comment"><div class="comment-meta">아직 댓글이 없습니다.</div></div>`;
+      return;
+    }
+
+    snap.forEach((commentDoc) => {
+      const d = commentDoc.data();
+      const commentId = commentDoc.id;
+      const alreadyLiked = getCommentLikedState(commentId);
+
+      const div = document.createElement("div");
+      div.className = "comment";
+
+      div.innerHTML = `
+        <div class="comment-body">${escapeHtml(d.content)}</div>
+        <div class="comment-meta">${new Date(d.createdAt).toLocaleString()}</div>
+        <div class="comment-like-row">
+          <div class="comment-like-btn ${alreadyLiked ? "active disabled" : ""}" id="like_${commentId}">
+            <span>★</span>
+            <span id="count_${commentId}">${d.likes || 0}</span>
+          </div>
+        </div>
+      `;
+
+      const likeEl = div.querySelector(`#like_${commentId}`);
+      const countEl = div.querySelector(`#count_${commentId}`);
+
+      likeEl.onclick = async () => {
+        if (getCommentLikedState(commentId)) {
+          alert("이 브라우저에서는 이 댓글에 이미 추천했습니다.");
+          return;
+        }
+
+        countEl.innerText = String(parseInt(countEl.innerText, 10) + 1);
+        setCommentLikedState(commentId, true);
+        likeEl.classList.add("active", "disabled");
+
+        await updateDoc(doc(db, "posts", id, "comments", commentId), {
+          likes: increment(1)
+        });
+      };
+
+      box.appendChild(div);
+    });
+  });
+
+  function escapeHtml(text) {
+    return String(text)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  }
 </script>
 
 </body>
