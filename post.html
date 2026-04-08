@@ -8,57 +8,77 @@
 body {
   margin:0;
   font-family:sans-serif;
+  background:#0b1220;
+  color:#fff;
+}
+
+.back {
+  position:fixed;
+  top:15px;
+  left:15px;
+  padding:10px 16px;
+  border-radius:999px;
+  background:#0008;
+  color:#fff;
+  text-decoration:none;
 }
 
 .wrap {
   width:800px;
-  margin:60px auto;
+  margin:80px auto;
 }
 
-.star {
-  color:gray;
+.box {
+  background:#1b2438;
+  padding:20px;
+  border-radius:20px;
+}
+
+.big-btn {
+  font-size:24px;
   cursor:pointer;
+  margin-right:10px;
 }
 
 .star.active {
   color:gold;
 }
 
-.down {
-  cursor:pointer;
-}
-
 .comment {
-  border-top:1px solid #ddd;
-  padding:8px 0;
+  margin-top:10px;
+  padding:10px;
+  border-top:1px solid #555;
 }
 </style>
 </head>
 
 <body>
 
-<div class="wrap">
-<a href="board.html">← 목록</a>
+<a class="back" href="board.html">← 이전으로</a>
 
+<div class="wrap">
+
+<div class="box">
 <h2 id="title"></h2>
 <p id="content"></p>
 
 <div>
-<span class="star" id="like">★</span>
+<span class="big-btn star" id="like">★</span>
 <span id="likeCount"></span>
 
-<span class="down" id="dislike">↓</span>
+<span class="big-btn" id="dislike">↓</span>
 <span id="dislikeCount"></span>
 </div>
+</div>
 
-<hr>
-
+<div class="box">
 <h3>댓글</h3>
 
 <textarea id="commentInput"></textarea>
 <button onclick="addComment()">등록</button>
 
 <div id="comments"></div>
+</div>
 
 </div>
 
@@ -68,7 +88,7 @@ import {
  getFirestore, doc, getDoc,
  updateDoc, increment,
  collection, addDoc,
- onSnapshot, query, orderBy
+ onSnapshot
 }
 from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
 
@@ -82,56 +102,72 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 const id = new URLSearchParams(location.search).get("id");
-
 const postRef = doc(db,"posts",id);
 
 const snap = await getDoc(postRef);
 const data = snap.data();
 
-document.getElementById("title").innerText = data.title;
-document.getElementById("content").innerText = data.content;
+document.getElementById("title").innerText=data.title;
+document.getElementById("content").innerText=data.content;
 
-const likeBtn = document.getElementById("like");
-const dislikeBtn = document.getElementById("dislike");
+const likeBtn=document.getElementById("like");
+const dislikeBtn=document.getElementById("dislike");
 
-document.getElementById("likeCount").innerText = data.likes||0;
-document.getElementById("dislikeCount").innerText = data.dislikes||0;
+const likeCount=document.getElementById("likeCount");
+const dislikeCount=document.getElementById("dislikeCount");
 
-likeBtn.onclick = async()=>{
- await updateDoc(postRef,{likes: increment(1)});
+likeCount.innerText=data.likes||0;
+dislikeCount.innerText=data.dislikes||0;
+
+/* 즉시 반응 */
+likeBtn.onclick=async()=>{
+ likeCount.innerText=parseInt(likeCount.innerText)+1;
  likeBtn.classList.add("active");
+ await updateDoc(postRef,{likes:increment(1)});
 };
 
-dislikeBtn.onclick = async()=>{
- await updateDoc(postRef,{dislikes: increment(1)});
+dislikeBtn.onclick=async()=>{
+ dislikeCount.innerText=parseInt(dislikeCount.innerText)+1;
+ await updateDoc(postRef,{dislikes:increment(1)});
 };
 
-const commentRef = collection(db,"posts",id,"comments");
+/* 댓글 */
+const commentRef=collection(db,"posts",id,"comments");
 
-window.addComment = async()=>{
- const text = document.getElementById("commentInput").value;
+window.addComment=async()=>{
+ const text=document.getElementById("commentInput").value;
  await addDoc(commentRef,{
   content:text,
   createdAt:Date.now(),
-  likes:0,
-  dislikes:0
+  likes:0
  });
 };
 
-onSnapshot(query(commentRef, orderBy("createdAt")), snap=>{
- const box = document.getElementById("comments");
+/* 댓글 표시 + 좋아요 */
+onSnapshot(commentRef,snap=>{
+ const box=document.getElementById("comments");
  box.innerHTML="";
 
  snap.forEach(doc=>{
-  const d = doc.data();
+  const d=doc.data();
 
-  const div = document.createElement("div");
+  const div=document.createElement("div");
   div.className="comment";
 
-  div.innerHTML = `
+  const likeId="c_like_"+doc.id;
+
+  div.innerHTML=`
     ${d.content}<br>
-    ★ ${d.likes||0} ↓ ${d.dislikes||0}
+    <span class="big-btn star" id="${likeId}">★</span>
+    <span id="count_${doc.id}">${d.likes||0}</span>
   `;
+
+  div.querySelector("#"+likeId).onclick=async()=>{
+    const countEl=document.getElementById("count_"+doc.id);
+    countEl.innerText=parseInt(countEl.innerText)+1;
+
+    await updateDoc(doc.ref,{likes:increment(1)});
+  };
 
   box.appendChild(div);
  });
