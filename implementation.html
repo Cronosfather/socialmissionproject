@@ -126,43 +126,7 @@
       max-height: 850px;
       width: auto;
       filter: saturate(1.05) drop-shadow(0 14px 26px rgba(0,0,0,0.3));
-    }
-
-    .pulse-dot {
-      position: absolute;
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      background: #ff2d2d;
-      box-shadow:
-        0 0 0 0 rgba(255,45,45,0.75),
-        0 0 18px 8px rgba(255,45,45,0.58);
-      transform: translate(-50%, -50%);
-      opacity: 0;
-      z-index: 5;
-      pointer-events: none;
-    }
-
-    .pulse-dot.animating {
-      animation: dotPulse 1s infinite;
-    }
-
-    @keyframes dotPulse {
-      0% {
-        box-shadow:
-          0 0 0 0 rgba(255,45,45,0.6),
-          0 0 18px 8px rgba(255,45,45,0.52);
-      }
-      70% {
-        box-shadow:
-          0 0 0 18px rgba(255,45,45,0),
-          0 0 24px 10px rgba(255,45,45,0.36);
-      }
-      100% {
-        box-shadow:
-          0 0 0 0 rgba(255,45,45,0),
-          0 0 18px 8px rgba(255,45,45,0.52);
-      }
+      object-fit: contain;
     }
 
     .region-panel {
@@ -243,19 +207,6 @@
       color: #d7def5;
     }
 
-    .path-overlay {
-      position: absolute;
-      inset: 0;
-      z-index: 4;
-      pointer-events: none;
-    }
-
-    .path-overlay path {
-      fill: none;
-      stroke: transparent;
-      stroke-width: 10;
-    }
-
     @media (max-width: 720px) {
       .wrap {
         width: min(1120px, calc(100% - 20px));
@@ -309,16 +260,7 @@
       <div class="status" id="status-text"></div>
 
       <div class="body-area">
-        <img class="body-figure" src="vascular_body.png" alt="인체 혈관 지도" />
-        <svg class="path-overlay" id="path-overlay" viewBox="0 0 1600 900" preserveAspectRatio="none">
-             <path d="M 930 440 
-                      C 890 500, 855 485, 820 455
-                      S 765 390, 752 320
-                      S 748 210, 748 145
-                      S 748 105, 748 82" 
-                   fill="transparent" stroke="cyan" stroke-width="6" id="blood-path" />
-        </svg>
-        <div class="pulse-dot" id="pulse-dot"></div>
+        <img class="body-figure" id="vessel-frame" src="vesselmap1.png" alt="인체 혈관 이동 프레임" />
       </div>
 
       <div class="region-panel">
@@ -332,13 +274,11 @@
       </div>
     </div>
 
-    <div class="guide" id="guide">마약 종류를 고른 뒤 화면을 클릭하면 팔꿈치 혈관 → 뇌 도달 애니메이션이 시작됩니다.</div>
+    <div class="guide" id="guide">마약 종류를 고른 뒤 화면을 클릭하면 혈관 이동 프레임이 순차적으로 재생됩니다.</div>
   </div>
 
   <script>
     const stage = document.getElementById("stage");
-    const pulseDot = document.getElementById("pulse-dot");
-    const bloodPath = document.getElementById("blood-path");
     const statusText = document.getElementById("status-text");
     const drugButtons = document.getElementById("drug-buttons");
 
@@ -346,13 +286,16 @@
     const regionImage = document.getElementById("region-image");
     const regionCaption = document.getElementById("region-caption");
 
+    const vesselFrame = document.getElementById("vessel-frame");
+
     let timers = [];
-    let frameId = null;
     let running = false;
     let selectedDrug = "meth";
 
+    const TOTAL_FRAMES = 29;
     const DUR_VESSEL = 8200;
     const REGION_FLASH_DUR = 6500;
+    const FRAME_INTERVAL = DUR_VESSEL / TOTAL_FRAMES;
 
     const DRUGS = {
       meth: {
@@ -395,8 +338,6 @@
     function clearAll() {
       timers.forEach(clearTimeout);
       timers = [];
-      if (frameId) cancelAnimationFrame(frameId);
-      frameId = null;
       running = false;
     }
 
@@ -406,25 +347,8 @@
     }
 
     function resetSlides() {
-      pulseDot.style.opacity = "0";
-      pulseDot.classList.remove("animating");
+      vesselFrame.src = "vesselmap1.png";
       clearRegionFlash();
-    }
-
-    function getPathPoint(progress) {
-      const totalLength = bloodPath.getTotalLength();
-      return bloodPath.getPointAtLength(totalLength * progress);
-    }
-
-    function positionDotAt(progress) {
-      const point = getPathPoint(progress);
-      const stageRect = stage.getBoundingClientRect();
-
-      const x = point.x / 1600 * stageRect.width;
-      const y = point.y / 900 * stageRect.height;
-
-      pulseDot.style.left = `${x}px`;
-      pulseDot.style.top = `${y}px`;
     }
 
     function renderDrugImage(drugKey) {
@@ -475,22 +399,12 @@
       });
     }
 
-    function animateBloodFlow(duration = DUR_VESSEL) {
-      const start = performance.now();
-      pulseDot.style.opacity = "1";
-      pulseDot.classList.add("animating");
-
-      function frame(now) {
-        const elapsed = now - start;
-        const t = Math.min(elapsed / duration, 1);
-        positionDotAt(t);
-
-        if (t < 1) {
-          frameId = requestAnimationFrame(frame);
-        }
+    function playVesselFrames() {
+      for (let i = 1; i <= TOTAL_FRAMES; i++) {
+        timers.push(setTimeout(() => {
+          vesselFrame.src = `vesselmap${i}.png`;
+        }, (i - 1) * FRAME_INTERVAL));
       }
-
-      frameId = requestAnimationFrame(frame);
     }
 
     function startSequence() {
@@ -500,13 +414,10 @@
 
       const info = DRUGS[selectedDrug];
 
-      positionDotAt(0);
-      animateBloodFlow(DUR_VESSEL);
+      playVesselFrames();
       updateStatusText(`혈관 이동 중... ${info.label} 성분이 팔꿈치 혈관에서 뇌로 향합니다.`);
 
       timers.push(setTimeout(() => {
-        pulseDot.style.opacity = "0";
-        pulseDot.classList.remove("animating");
         flashDrugImage(selectedDrug);
         updateStatusText(`뇌 도달! ${info.message}`);
       }, DUR_VESSEL));
@@ -520,10 +431,6 @@
 
     stage.addEventListener("click", () => {
       startSequence();
-    });
-
-    window.addEventListener("resize", () => {
-      if (!running) positionDotAt(0);
     });
 
     renderDrugButtons();
