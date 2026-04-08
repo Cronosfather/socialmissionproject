@@ -5,65 +5,103 @@
 <title>익명게시판</title>
 
 <style>
-body {
-  margin:0;
-  font-family:sans-serif;
-  background:#0b1220;
-  color:#fff;
-}
+  body {
+    margin: 0;
+    font-family: "Pretendard", "Noto Sans KR", Arial, sans-serif;
+    background: #0b1220;
+    color: #fff;
+  }
 
-.back {
-  position:fixed;
-  top:15px;
-  left:15px;
-  padding:10px 16px;
-  border-radius:999px;
-  background:#0008;
-  color:#fff;
-  text-decoration:none;
-}
+  .back {
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    padding: 10px 16px;
+    border-radius: 999px;
+    background: rgba(0,0,0,0.5);
+    color: #fff;
+    text-decoration: none;
+    font-weight: 700;
+    border: 1px solid rgba(255,255,255,0.14);
+    backdrop-filter: blur(8px);
+  }
 
-.wrap {
-  width:900px;
-  margin:80px auto;
-}
+  .wrap {
+    width: min(900px, calc(100% - 24px));
+    margin: 80px auto;
+  }
 
-.box {
-  background:#1b2438;
-  padding:20px;
-  border-radius:20px;
-  margin-bottom:20px;
-}
+  .box {
+    background: #1b2438;
+    padding: 20px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 12px 28px rgba(0,0,0,0.18);
+  }
 
-input, textarea {
-  width:100%;
-  padding:12px;
-  border-radius:12px;
-  border:none;
-  margin-bottom:10px;
-  background:#111;
-  color:#fff;
-}
+  h1 {
+    margin: 0 0 18px;
+    font-size: 2rem;
+    letter-spacing: -0.03em;
+  }
 
-button {
-  padding:10px 14px;
-  border-radius:999px;
-  border:none;
-  background:#4c8cff;
-  color:#fff;
-}
+  input, textarea {
+    width: 100%;
+    padding: 12px;
+    border-radius: 12px;
+    border: none;
+    margin-bottom: 10px;
+    background: #111827;
+    color: #fff;
+    font: inherit;
+    outline: none;
+  }
 
-.post {
-  background:#1b2438;
-  padding:16px;
-  border-radius:16px;
-  margin-bottom:10px;
-}
+  input::placeholder, textarea::placeholder {
+    color: #9fb0d1;
+  }
 
-.title {
-  font-size:18px;
-  cursor:pointer;
-}
+  textarea {
+    min-height: 140px;
+    resize: vertical;
+    line-height: 1.7;
+  }
+
+  button {
+    padding: 10px 14px;
+    border-radius: 999px;
+    border: none;
+    background: #4c8cff;
+    color: #fff;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  .post {
+    background: #1b2438;
+    padding: 16px;
+    border-radius: 16px;
+    margin-bottom: 10px;
+    box-shadow: 0 8px 18px rgba(0,0,0,0.12);
+  }
+
+  .title {
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-bottom: 8px;
+    letter-spacing: -0.02em;
+  }
+
+  .title:hover {
+    text-decoration: underline;
+  }
+
+  .meta {
+    color: #a9b8d6;
+    font-size: 0.85rem;
+    line-height: 1.6;
+  }
 </style>
 </head>
 
@@ -72,65 +110,95 @@ button {
 <a class="back" href="index.html">← 이전으로</a>
 
 <div class="wrap">
+  <div class="box">
+    <h1>익명게시판</h1>
+    <input id="title" placeholder="제목">
+    <textarea id="content" placeholder="내용"></textarea>
+    <button onclick="writePost()">작성</button>
+  </div>
 
-<div class="box">
-<input id="title" placeholder="제목">
-<textarea id="content" placeholder="내용"></textarea>
-<button onclick="writePost()">작성</button>
-</div>
-
-<div id="list"></div>
-
+  <div id="list"></div>
 </div>
 
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
-import { getFirestore, collection, addDoc, onSnapshot, query, orderBy }
-from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
+  import { getFirestore, collection, addDoc, onSnapshot, query, orderBy }
+  from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
 
-const firebaseConfig = {
- apiKey: "AIzaSy...",
- authDomain: "socialmissionproject.firebaseapp.com",
- projectId: "socialmissionproject",
-};
+  const firebaseConfig = {
+    apiKey: "AIzaSyCwjpn1zXbY3rtNSH6clOgNZ3eYRwjqsqY",
+    authDomain: "socialmissionproject.firebaseapp.com",
+    projectId: "socialmissionproject",
+    storageBucket: "socialmissionproject.firebasestorage.app",
+    messagingSenderId: "347247388589",
+    appId: "1:347247388589:web:781261d448feb5afbce324",
+    measurementId: "G-DX93ZMJB15"
+  };
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
 
-window.writePost = async()=>{
- const title = document.getElementById("title").value;
- const content = document.getElementById("content").value;
+  const list = document.getElementById("list");
 
- await addDoc(collection(db,"posts"),{
-  title, content,
-  createdAt: Date.now(),
-  likes:0,
-  dislikes:0
- });
-};
+  window.writePost = async () => {
+    const title = document.getElementById("title").value.trim();
+    const content = document.getElementById("content").value.trim();
 
-const list = document.getElementById("list");
+    if (!title || !content) {
+      alert("제목과 내용을 입력하세요.");
+      return;
+    }
 
-onSnapshot(query(collection(db,"posts"),orderBy("createdAt","desc")),snap=>{
- list.innerHTML="";
- snap.forEach(doc=>{
-  const d = doc.data();
+    await addDoc(collection(db, "posts"), {
+      title,
+      content,
+      createdAt: Date.now(),
+      likes: 0,
+      dislikes: 0
+    });
 
-  const div = document.createElement("div");
-  div.className="post";
+    document.getElementById("title").value = "";
+    document.getElementById("content").value = "";
+  };
 
-  div.innerHTML=`
-    <div class="title" onclick="go('${doc.id}')">${d.title}</div>
-    <div>${new Date(d.createdAt).toLocaleString()}</div>
-  `;
+  onSnapshot(query(collection(db, "posts"), orderBy("createdAt", "desc")), (snap) => {
+    list.innerHTML = "";
 
-  list.appendChild(div);
- });
-});
+    if (snap.empty) {
+      list.innerHTML = `<div class="post"><div class="meta">아직 게시글이 없습니다.</div></div>`;
+      return;
+    }
 
-window.go=(id)=>{
- location.href="post.html?id="+id;
-};
+    snap.forEach((doc) => {
+      const d = doc.data();
+
+      const div = document.createElement("div");
+      div.className = "post";
+
+      div.innerHTML = `
+        <div class="title" onclick="go('${doc.id}')">${escapeHtml(d.title)}</div>
+        <div class="meta">
+          ${new Date(d.createdAt).toLocaleString()}<br>
+          추천 ${d.likes || 0} · 비추천 ${d.dislikes || 0}
+        </div>
+      `;
+
+      list.appendChild(div);
+    });
+  });
+
+  window.go = (id) => {
+    location.href = "post.html?id=" + id;
+  };
+
+  function escapeHtml(text) {
+    return String(text)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  }
 </script>
 
 </body>
