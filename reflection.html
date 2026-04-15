@@ -23,11 +23,12 @@
       z-index: 100;
       padding: 12px 16px;
       border-radius: 999px;
-      background: rgba(0,0,0,0.7);
+      background: rgba(0,0,0,0.72);
       color: #fff;
       text-decoration: none;
       font-weight: 700;
       border: 1px solid rgba(255,255,255,0.16);
+      backdrop-filter: blur(8px);
     }
 
     .hero {
@@ -37,14 +38,15 @@
       min-height: 360px;
       overflow: hidden;
       color: #fff;
-      background: linear-gradient(180deg, #ff4d4d 0%, #7a0000 100%);
+      background: linear-gradient(180deg, #22be57 0%, #0d6d2e 100%);
     }
 
     .fill {
       position: absolute;
       inset: 0;
-      background: linear-gradient(180deg, #ff4d4d 0%, #7a0000 100%);
+      background: linear-gradient(180deg, #22be57 0%, #0d6d2e 100%);
       transform: translateY(0%);
+      will-change: transform;
     }
 
     .hero-inner {
@@ -54,38 +56,81 @@
     }
 
     .small {
-      font-size: 1rem;
+      font-size: 0.95rem;
       font-weight: 700;
-      margin-bottom: 20px;
+      margin-bottom: 22px;
+      letter-spacing: -0.03em;
     }
 
     h1 {
       margin: 0;
-      font-size: 3rem;
+      font-size: clamp(2.2rem, 5vw, 4.6rem);
+      line-height: 1.03;
+      letter-spacing: -0.05em;
     }
 
     .content {
+      position: relative;
+      z-index: 2;
       background: #fff;
-      padding: 40px 0 80px;
+      padding: 44px 0 90px;
     }
 
     .box {
-      width: min(900px, 90%);
+      width: min(980px, calc(100% - 40px));
       margin: 0 auto;
       background: #fff;
-      border-radius: 20px;
-      box-shadow: 0 15px 40px rgba(0,0,0,0.2);
-      padding: 30px;
-    }
-
-    h2 {
-      margin-top: 30px;
-      font-size: 1.4rem;
+      border: 1px solid rgba(0,0,0,0.08);
+      border-radius: 24px;
+      box-shadow: 0 18px 50px rgba(0,0,0,0.15);
+      padding: 34px 28px;
     }
 
     p {
-      line-height: 1.9;
-      margin-bottom: 18px;
+      margin: 0 0 18px;
+      line-height: 1.95;
+      font-size: 1rem;
+      word-break: keep-all;
+    }
+
+    .graph-box {
+      margin: 28px 0;
+      padding: 18px;
+      border-radius: 18px;
+      border: 1px solid rgba(0,0,0,0.08);
+      background: #fafafa;
+    }
+
+    .graph-box img {
+      width: 100%;
+      border-radius: 12px;
+      display: block;
+    }
+
+    .graph-caption {
+      margin-top: 10px;
+      font-size: 0.9rem;
+      color: #555;
+      line-height: 1.6;
+    }
+
+    .graph-caption strong {
+      color: #0d6d2e;
+    }
+
+    @media (max-width: 720px) {
+      .hero-inner {
+        padding: 88px 22px 24px;
+      }
+
+      .box {
+        width: min(980px, calc(100% - 20px));
+        padding: 24px 18px;
+      }
+
+      .graph-box {
+        padding: 14px;
+      }
     }
   </style>
 </head>
